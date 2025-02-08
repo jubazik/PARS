@@ -10,7 +10,7 @@ def get_downloads_folder():
     return os.path.join(os.path.expanduser("~"), "Downloads")
 
 
-def count_numbers(number):  # проверка  количество цифр в вагоне
+def count_numbers(number):  # проверка количество цифр в вагоне
     numbers = str(number)
     if len(numbers) == 8:
         return True
@@ -43,7 +43,7 @@ if __name__ == "__main__":
             if user.lower() == 'да':
                 all_data = db.get_data_all()
                 print("Данные из базы данных:")
-                print(all_data)
+                print(clean_data(all_data))
             elif count_numbers(user) == True:
                 print(db.get_nomber_cargo(user))
             db.close()
