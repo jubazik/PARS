@@ -1,4 +1,6 @@
 import sqlite3
+
+
 class Database:
     def __init__(self, db_name):
         self.connection = sqlite3.connect(db_name)
@@ -24,7 +26,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS cargo (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 document_id INTEGER,
-                wagon TEXT,
+                wagon INTEGER,
                 container_and_size TEXT,
                 type TEXT,
                 control_mark TEXT,
@@ -36,23 +38,25 @@ class Database:
         ''')
         self.connection.commit()
 
-    def save_document(self, data): # сохраняет заголовок документа
+    def save_document(self, data):  # сохраняет заголовок документа
         self.cursor.execute('''
             INSERT INTO documents (number, station, notification, date, client_name, place_of_transfer, locomotive, route_belonging, client_representative)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (data['number'], data['station'], data['notification'], data['date'], data['client_name'], data['place_of_transfer'], data['locomotive'], data['route_belonging'], data['client_representative']))
+        ''', (data['number'], data['station'], data['notification'], data['date'], data['client_name'],
+              data['place_of_transfer'], data['locomotive'], data['route_belonging'], data['client_representative']))
         document_id = self.cursor.lastrowid
         self.connection.commit()
         return document_id
 
-    def save_cargo(self, document_id, cargo_data): # Сохраняет таблицу вагонов и историю
+    def save_cargo(self, document_id, cargo_data):  # Сохраняет таблицу вагонов и историю
         self.cursor.execute('''
             INSERT INTO cargo (document_id, wagon, container_and_size, type, control_mark, operation, cargo_names, note)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (document_id, cargo_data['wagon'], cargo_data['container_and_size'], cargo_data['type'], cargo_data['control_mark'], cargo_data['operation'], cargo_data['cargo_names'], cargo_data['note']))
+        ''', (document_id, cargo_data['wagon'], cargo_data['container_and_size'], cargo_data['type'],
+              cargo_data['control_mark'], cargo_data['operation'], cargo_data['cargo_names'], cargo_data['note']))
         self.connection.commit()
 
-    def get_data_all(self): # GET-Запрос на вывод всю информацию из базы данных
+    def get_data_all(self):  # GET-Запрос на вывод всю информацию из базы данных
         query = '''
             SELECT d.*, c.*
             FROM documents d
@@ -78,10 +82,17 @@ class Database:
         self.connection.commit()
         return result
 
+    def get_notification_number(self, notification):  # GET-Запрос по номеру документа Г-2б
+        query = '''
+        SELECT cargo.*
+        FROM cargo
+        JOIN documents ON cargo.document_id = cargo.document_id
+        WHERE documents.notification = ?
+        '''
+        self.cursor.execute(query, (notification))
+        self.connection.commit()
 
-    def get_notification_number(self, notification): # GET-Запрос по номеру документа Г-2б
-        pass
-    def get_nomber_cargo(self, wagon): # GET-Запрос выводит информацию о документе и связаные с ними вогоны
+    def get_nomber_cargo(self, wagon):  # GET-Запрос выводит информацию о документе и связаные с ними вогоны
         query = '''
             SELECT d.*, c.*
             FROM documents d

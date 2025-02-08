@@ -10,6 +10,14 @@ def get_downloads_folder():
     return os.path.join(os.path.expanduser("~"), "Downloads")
 
 
+def count_numbers(number):  # проверка  количество цифр в вагоне
+    numbers = str(number)
+    if len(numbers) == 8:
+        return True
+    else:
+        return False
+
+
 def clean_data(data):
     """ Убираем \xa0 и лишние пробелы """
     cleaned_data = []
@@ -18,6 +26,7 @@ def clean_data(data):
         cleaned_data.append(cleaned_row)
     return cleaned_data
 
+
 if __name__ == "__main__":
     exit_program = False  # Изменяем начальное значение на False
     while not exit_program:  # Цикл продолжается, пока exit_program False
@@ -25,18 +34,17 @@ if __name__ == "__main__":
         file_name = 'null.html'
         file_path = os.path.join(get_downloads_folder(), file_name)
 
-        # db_name = 'documents.db'
         db = Database(path_to_db)
         # Проверяем, существует ли файл
         if not os.path.isfile(file_path):
             print(f"Файл {file_path} не найден.")
-            print("Вам показать данные: Да\Нет № вагон")
+            print("Вам показать данные: Да\Нет № вагон ")
             user = input(":")
             if user.lower() == 'да':
                 all_data = db.get_data_all()
                 print("Данные из базы данных:")
                 print(all_data)
-            else:
+            elif count_numbers(user) == True:
                 print(db.get_nomber_cargo(user))
             db.close()
             # Добавляем возможность выхода
