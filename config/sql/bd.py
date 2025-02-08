@@ -79,9 +79,8 @@ class Database:
         return result
 
 
-
-
-
+    def get_notification_number(self, notification): # GET-Запрос по номеру документа Г-2б
+        pass
     def get_nomber_cargo(self, wagon): # GET-Запрос выводит информацию о документе и связаные с ними вогоны
         query = '''
             SELECT d.*, c.*

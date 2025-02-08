@@ -1,8 +1,9 @@
 import os
 import sys
-from config.sql.bd import *
-from model.g_2b import *
+from config.sql.bd import Database
+from model.g_2b import HTMLParser
 from config.settings import path_to_db
+
 
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
@@ -17,46 +18,52 @@ def clean_data(data):
         cleaned_data.append(cleaned_row)
     return cleaned_data
 
-
 if __name__ == "__main__":
-    # Определяем путь к файлу null.html в папке загрузок
-    file_name = 'null.html'
-    file_path = os.path.join(get_downloads_folder(), file_name)
-    # db_name = 'documents.db'
-    db = Database(path_to_db)
-    # Проверяем, существует ли файл
-    if not os.path.isfile(file_path):
-        print(f"Файл {file_path} не найден.")
-        print("Вам показать данные:Да\Нет № вагон")
-        user = input(":")
-        if user.lower() == 'да':
+    exit_program = False  # Изменяем начальное значение на False
+    while not exit_program:  # Цикл продолжается, пока exit_program False
+        # Определяем путь к файлу null.html в папке загрузок
+        file_name = 'null.html'
+        file_path = os.path.join(get_downloads_folder(), file_name)
 
-            all_data = db.get_data_all()
+        # db_name = 'documents.db'
+        db = Database(path_to_db)
+        # Проверяем, существует ли файл
+        if not os.path.isfile(file_path):
+            print(f"Файл {file_path} не найден.")
+            print("Вам показать данные: Да\Нет № вагон")
+            user = input(":")
+            if user.lower() == 'да':
+                all_data = db.get_data_all()
+                print("Данные из базы данных:")
+                print(all_data)
+            else:
+                print(db.get_nomber_cargo(user))
+            db.close()
+            # Добавляем возможность выхода
+            exit_command = input("Введите 'выход' для завершения программы или нажмите Enter для продолжения: ")
+            if exit_command.lower() == 'выход':
+                exit_program = True  # Устанавливаем флаг выхода
+            continue  # Переходим к следующей итерации цикла
 
-            print("Данные из базы данных:")
-            print(all_data)
         else:
-            print(db.get_nomber_cargo(user))
+            # Парсим HTML файл
+            parser = HTMLParser(file_path)
+            parser.parse()
+            data = parser.get_data()
 
+            # Сохраняем данные в базу данных
+            document_id = db.save_document(data)
 
-        db.close()
-        sys.exit(1)
-    else:
-        # Парсим HTML файл
-        parser = HTMLParser(file_path)
-        parser.parse()
-        data = parser.get_data()
+            for cargo in data['table_data']:
+                db.save_cargo(document_id, cargo)
 
-        # Сохраняем данные в базу данных
-
-        document_id = db.save_document(data)
-
-        for cargo in data['table_data']:
-            db.save_cargo(document_id, cargo)
-
-        # Удаляем файл после обработки
-        os.remove(file_path)
-        print(f"Файл {file_path} был удалён.")
+            # Удаляем файл после обработки
+            os.remove(file_path)
+            print(f"Файл {file_path} был удалён.")
 
         # Вывод данных
         db.close()
+        # Добавляем возможность выхода
+        exit_command = input("Введите 'выход' для завершения программы или нажмите Enter для продолжения: ")
+        if exit_command.lower() == 'выход':
+            exit_program = True  # Устанавливаем флаг выхода
