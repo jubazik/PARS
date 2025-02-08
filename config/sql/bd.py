@@ -92,7 +92,7 @@ class Database:
         self.cursor.execute(query, (notification))
         self.connection.commit()
 
-    def get_nomber_cargo(self, wagon):  # GET-Запрос выводит информацию о документе и связаные с ними вогоны
+    def get_nomber_cargo(self, wagon):  # GET-Запрос выводит информацию о документе и связанные с ними в вагоны
         query = '''
             SELECT d.*, c.*
             FROM documents d
