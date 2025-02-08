@@ -27,10 +27,17 @@ if __name__ == "__main__":
     # Проверяем, существует ли файл
     if not os.path.isfile(file_path):
         print(f"Файл {file_path} не найден.")
-        all_data = db.get_data_all()
+        print("Вам показать данные:Да\Нет № вагон")
+        user = input(":")
+        if user.lower() == 'да':
 
-        print("Данные из базы данных:")
-        print(clean_data(all_data))
+            all_data = db.get_data_all()
+
+            print("Данные из базы данных:")
+            print(all_data)
+        else:
+            print(db.get_nomber_cargo(user))
+
 
         db.close()
         sys.exit(1)

@@ -53,17 +53,77 @@ class Database:
         self.connection.commit()
 
     def get_data_all(self): # GET-Запрос на вывод всю информацию из базы данных
-        table_all = self.cursor.execute('''
-            SELECT documents.*, cargo.*
-            FROM documents
-            JOIN cargo ON documents.id = cargo.document_id;  -- Используем 'id' из documents и 'document_id' из cargo
-        ''').fetchall()
+        query = '''
+            SELECT d.*, c.*
+            FROM documents d
+            LEFT JOIN cargo c ON d.id = c.document_id
+        '''
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+
+        result = {}
+        for row in rows:
+            document_id = row[0]  # Предполагается, что id документа — это первый элемент
+            document_data = row[:10]  # Предполагается, что у документа 10 полей
+            cargo_data = row[10:]  # Остальные поля — это данные о грузе
+
+            if document_id not in result:
+                result[document_id] = {
+                    'document': document_data,
+                    'cargo': []
+                }
+
+            if any(cargo_data):  # Проверяем, есть ли данные о грузе
+                result[document_id]['cargo'].append(cargo_data)
         self.connection.commit()
-        return table_all
+        return result
 
-    def get_nomber_cargo(self, number_cargo): # GET-Запрос выводит информацию о документе и связаные с ними вогоны
-        pass
 
+
+
+
+    def get_nomber_cargo(self, wagon): # GET-Запрос выводит информацию о документе и связаные с ними вогоны
+        query = '''
+            SELECT d.*, c.*
+            FROM documents d
+            JOIN cargo c ON d.id = c.document_id
+            WHERE c.wagon = ?
+        '''
+        self.cursor.execute(query, (wagon,))
+        rows = self.cursor.fetchall()
+
+        result = {}
+        for row in rows:
+            document = {
+                'id': row[0],
+                'number': row[1],
+                'station': row[2],
+                'notification': row[3],
+                'date': row[4],
+                'client_name': row[5],
+                'place_of_transfer': row[6],
+                'locomotive': row[7],
+                'route_belonging': row[8],
+                'client_representative': row[9],
+            }
+            cargo = {
+                'id': row[10],
+                'document_id': row[11],
+                'wagon': row[12],
+                'container_and_size': row[13],
+                'type': row[14],
+                'control_mark': row[15],
+                'operation': row[16],
+                'cargo_names': row[17],
+                'note': row[18],
+            }
+
+            # Добавляем документ и соответствующий груз в словарь
+            if tuple(document.items()) not in result:
+                result[tuple(document.items())] = []
+            result[tuple(document.items())].append(cargo)
+
+        return result
 
     def close(self):
         self.connection.close()
