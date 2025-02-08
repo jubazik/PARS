@@ -2,7 +2,7 @@ import os
 import sys
 from config.sql.bd import *
 from model.g_2b import *
-
+from config.settings import path_to_db
 
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
@@ -22,8 +22,8 @@ if __name__ == "__main__":
     # Определяем путь к файлу null.html в папке загрузок
     file_name = 'null.html'
     file_path = os.path.join(get_downloads_folder(), file_name)
-    db_name = 'documents.db'
-    db = Database(db_name)
+    # db_name = 'documents.db'
+    db = Database(path_to_db)
     # Проверяем, существует ли файл
     if not os.path.isfile(file_path):
         print(f"Файл {file_path} не найден.")

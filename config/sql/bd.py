@@ -87,8 +87,13 @@ class Database:
             SELECT d.*, c.*
             FROM documents d
             JOIN cargo c ON d.id = c.document_id
-            WHERE c.wagon = ?
+            WHERE c.document_id IN (
+                SELECT document_id
+                FROM cargo
+                WHERE wagon = ?
+            )
         '''
+
         self.cursor.execute(query, (wagon,))
         rows = self.cursor.fetchall()
 
@@ -122,7 +127,7 @@ class Database:
             if tuple(document.items()) not in result:
                 result[tuple(document.items())] = []
             result[tuple(document.items())].append(cargo)
-
+        self.connection.commit()
         return result
 
     def close(self):
