@@ -1,13 +1,18 @@
 import os
-import sys
-from config.sql.bd import Database
-from model.g_2b import HTMLParser
+import tkinter
+
 from config.settings import path_to_db
-
-
+from config.sql.bd import *
+from config.app import *
+import tkinter as tk
+from tkinter import messagebox, simpledialog
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
     return os.path.join(os.path.expanduser("~"), "Downloads")
+
+
+FILE_NAME = 'null.html'
+FILE_PATH = os.path.join(get_downloads_folder(), FILE_NAME)
 
 
 def count_numbers(number):  # проверка количество цифр в вагоне
@@ -27,51 +32,21 @@ def clean_data(data):
     return cleaned_data
 
 
+
+def document_gu_2b():
+    db = Database(path_to_db)
+    if not os.path.isfile(FILE_PATH):
+        return clean_data(db.get_data_all())
+    else:
+        return  clean_data(db.get_data_all())
+
+def documnet_gu_45():
+    return "функция еще не разработана"
+
+
+# логика построении программы
 if __name__ == "__main__":
-    exit_program = False  # Изменяем начальное значение на False
-    while not exit_program:  # Цикл продолжается, пока exit_program False
-        # Определяем путь к файлу null.html в папке загрузок
-        file_name = 'null.html'
-        file_path = os.path.join(get_downloads_folder(), file_name)
+    root = tk.Tk()
+    root.title("Обработка данных")
 
-        db = Database(path_to_db)
-        # Проверяем, существует ли файл
-        if not os.path.isfile(file_path):
-            print(f"Файл {file_path} не найден.")
-            print("Вам показать данные: Да\Нет № вагон ")
-            user = input(":")
-            if user.lower() == 'да':
-                all_data = db.get_data_all()
-                print("Данные из базы данных:")
-                print(clean_data(all_data))
-            elif count_numbers(user) == True:
-                print(db.get_nomber_cargo(user))
-            db.close()
-            # Добавляем возможность выхода
-            exit_command = input("Введите 'выход' для завершения программы или нажмите Enter для продолжения: ")
-            if exit_command.lower() == 'выход':
-                exit_program = True  # Устанавливаем флаг выхода
-            continue  # Переходим к следующей итерации цикла
-
-        else:
-            # Парсим HTML файл
-            parser = HTMLParser(file_path)
-            parser.parse()
-            data = parser.get_data()
-
-            # Сохраняем данные в базу данных
-            document_id = db.save_document(data)
-
-            for cargo in data['table_data']:
-                db.save_cargo(document_id, cargo)
-
-            # Удаляем файл после обработки
-            os.remove(file_path)
-            print(f"Файл {file_path} был удалён.")
-
-        # Вывод данных
-        db.close()
-        # Добавляем возможность выхода
-        exit_command = input("Введите 'выход' для завершения программы или нажмите Enter для продолжения: ")
-        if exit_command.lower() == 'выход':
-            exit_program = True  # Устанавливаем флаг выхода
+    root.mainloop()
