@@ -1,17 +1,20 @@
 import os
 import tkinter
-
-from config.settings import path_to_db
+# From documents.g_2b
+from config.parm import path_to_db
 from config.sql.bd import *
 from config.app import *
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+
+
+
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
     return os.path.join(os.path.expanduser("~"), "Downloads")
 
 
-FILE_NAME = 'null.html'
+FILE_NAME = 'PARS/null.html'
 FILE_PATH = os.path.join(get_downloads_folder(), FILE_NAME)
 
 
@@ -33,11 +36,12 @@ def clean_data(data):
 
 
 
-def document_gu_2b():
+def document_gu_2b(file_name):
     db = Database(path_to_db)
     if not os.path.isfile(FILE_PATH):
         return clean_data(db.get_data_all())
     else:
+
         return  clean_data(db.get_data_all())
 
 def documnet_gu_45():

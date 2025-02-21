@@ -1,9 +1,6 @@
 import os
-import tkinter as tk
-from tkinter import messagebox, simpledialog
-from config.sql.bd import Database
-from model.g_2b import HTMLParser
-from config.settings import path_to_db
+
+
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
     return os.path.join(os.path.expanduser("~"), "Downloads")

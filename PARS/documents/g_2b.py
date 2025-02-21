@@ -1,4 +1,23 @@
 from bs4 import BeautifulSoup
+import os
+
+
+def get_downloads_folder():
+    """Возвращает путь к папке загрузок пользователя в Windows."""
+    return os.path.join(os.path.expanduser("~"), "Downloads")
+
+
+FILE_NAME = 'null.html'
+FILE_PATH = os.path.join(get_downloads_folder(), FILE_NAME)
+
+
+def document_verification(file):
+    """ Проверка если в папке файла hull.html 'FILE_NAME' """
+    if not os.path.isfile(file):
+        return True
+    else:
+        return False
+
 
 
 class HTMLParser:
@@ -63,3 +82,5 @@ class HTMLParser:
         :return:
         """
         return self.data
+
+
