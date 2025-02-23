@@ -4,7 +4,7 @@ class Document(models.Model):
     number = models.IntegerField()
     station = models.CharField(max_length=255)
     notification = models.IntegerField(unique=True)
-    date = models.DateField()
+    date = models.CharField(max_length=100)
     client_name = models.CharField(max_length=255)
     place_of_transfer = models.CharField(max_length=255)
     locomotive = models.CharField(max_length=255)

@@ -14,22 +14,17 @@ class UploadFileView(View):
 
     def post(self, request):
         try:
-            print("FILES:", request.FILES)  # Отладочный вывод
             uploaded_file = request.FILES.get('file')
             if uploaded_file:
+                print("Файл получен:", uploaded_file.name)  # Отладочное сообщение
                 file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-                print(f"Saving file to: {file_path}")  # Отладочный вывод
 
-
-            if uploaded_file:
-                file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-                print(f"Saving file to: {file_path}")
-                # Сохраняем файл
+                # Сохраняем файл
                 with open(file_path, 'wb+') as destination:
                     for chunk in uploaded_file.chunks():
                         destination.write(chunk)
 
-                # Парсим файл
+                # Парсим файл
                 parser = HTMLParser(file_path)
                 parser.parse()
                 data = parser.get_data()
@@ -59,12 +54,15 @@ class UploadFileView(View):
                         note=item['note']
                     )
 
-                # Удаляем файл
+                # Удаляем файл
                 os.remove(file_path)
 
                 return JsonResponse({'status': 'success', 'message': 'File processed and data saved.'})
-        except:
-            return JsonResponse({'status': 'error', 'message': 'No file uploaded.'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'No file uploaded.'})
+        except Exception as e:
+            print("Ошибка:", str(e))  # Отладочное сообщение
+            return JsonResponse({'status': 'error', 'message': str(e)})
 
 
 

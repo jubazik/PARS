@@ -1,14 +1,10 @@
 from bs4 import BeautifulSoup
 import os
-
+from datetime import datetime
 
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
     return os.path.join(os.path.expanduser("~"), "Downloads")
-
-
-FILE_NAME = 'null.html'
-FILE_PATH = os.path.join(get_downloads_folder(), FILE_NAME)
 
 
 def document_verification(file):
