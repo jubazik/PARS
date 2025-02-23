@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ title }}</title>
 </head>
 <body>
-<h1>{% for doc in document %}
-    {{ doc.number }}
-    {{ doc.station }}
-    {{ doc.notification }}
-    {{ doc.date }}
-    {{ client_name }}
-    {{ place_of_transfer }}
-    {{ locomotive }}
-    {{ route_belonging }}
-    {{ client_representative }}
-</h1>
-{% endfor %}
+    {% for doc in documents %}
+        <p>{{ doc.number }}</p>
+        <p>{{ doc.station }}</p>
+        <p>{{ doc.notification }}</p>
+        <p>{{ doc.date }}</p>
+        <p>{{ client_name }}</p>
+        <p>{{ place_of_transfer }}</p>
+        <p>{{ locomotive }}</p>
+        <p>{{ route_belonging }}</p>
+        <p>{{ client_representative }}</p>
+
+    {% endfor %}
+
+
 </body>
 </html>
