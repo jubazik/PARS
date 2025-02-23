@@ -14,10 +14,16 @@ class UploadFileView(View):
 
     def post(self, request):
         try:
+            print("FILES:", request.FILES)  # Отладочный вывод
             uploaded_file = request.FILES.get('file')
             if uploaded_file:
                 file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
+                print(f"Saving file to: {file_path}")  # Отладочный вывод
 
+
+            if uploaded_file:
+                file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
+                print(f"Saving file to: {file_path}")
                 # Сохраняем файл
                 with open(file_path, 'wb+') as destination:
                     for chunk in uploaded_file.chunks():
@@ -61,15 +67,6 @@ class UploadFileView(View):
             return JsonResponse({'status': 'error', 'message': 'No file uploaded.'})
 
 
-# class DocumentCargo(ListView):
-#     model = Document
-#     templates_name = 'gu_2b/index.html'
-#     context_object_name = "document"
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         document = [doc for doc in Document.objects.all()]
-#         return document
 
 def idexs(request):
     context = "Главная"

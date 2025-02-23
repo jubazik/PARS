@@ -14,7 +14,7 @@ def get_downloads_folder():
     return os.path.join(os.path.expanduser("~"), "Downloads")
 
 
-FILE_NAME = 'PARS/null.html'
+FILE_NAME = 'PARS/file/null.html'
 FILE_PATH = os.path.join(get_downloads_folder(), FILE_NAME)
 
 
