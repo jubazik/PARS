@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import os
-
+from datetime import datetime
 
 def get_downloads_folder():
     """Возвращает путь к папке загрузок пользователя в Windows."""
