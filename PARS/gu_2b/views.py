@@ -1,7 +1,7 @@
 import os
 from documents.g_2b import *
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView
@@ -66,10 +66,19 @@ class UploadFileView(View):
 
 
 
+
+
 def idexs(request):
     context = "Главная"
     documents = Document.objects.all()
 
     return render(request, "gu_2b/index.html", {"documents": documents, "title": context})
+
+
+
+def get_ducumen_id_carg_all(request, document_id):
+    document = get_object_or_404(Document, id=document_id)
+    carg = Cargo.objects.filter(document=document)
+    return render(request, 'gu_2b/document_id.html', {"document":document, "carg":carg})
 
 # Create your views here.

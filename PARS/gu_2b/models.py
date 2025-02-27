@@ -12,6 +12,8 @@ class Document(models.Model):
     client_representative = models.CharField(max_length=255)
 
     class Meta:
+        verbose_name = "Документ"
+        verbose_name_plural = "Документы"
         db_table = 'documents'
 
 
@@ -25,8 +27,10 @@ class Cargo(models.Model):
     cargo_names = models.TextField()
     note = models.TextField()
 
-    class Meta:
-        db_table = 'cargo'
 
+    class Meta:
+        verbose_name = "груз"
+        verbose_name_plural = "груз"
+        db_table = 'cargo'
 
 # Create your models here.

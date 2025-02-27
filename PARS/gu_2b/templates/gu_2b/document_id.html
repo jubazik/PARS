@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма ГУ-2бВЦ/Э</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Форма ГУ-2бВЦ/Э</h2>
+        <p>0363826</p>
+    </div>
+
+    <div>
+        <p><strong>Станция:</strong> {{ document.station }}</p>
+        <p><strong>Уведомление №:</strong> {{ document.notification }}о завершении грузовой операции и готовности вагонов к уборке/
+о передаче вагонов на выставочный путь и готовности вагонов к уборке </p>
+        <p><strong>Дата:</strong> {{ document.date }}</p>
+        <p><strong>Наименование Клиента:</strong> {{ document.client_name }}</p>
+        <p><strong>Место передачи:</strong> {{ document.place_of_transfer }}</p>
+        <p><strong>Подача производилась локомотивом Перевозчика:</strong> {{ document.locomotive }}</p>
+        <p><strong>Принадлежность выставочного пути Перевозчика:</strong> {{ document.route_belonging }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>№ вагона</th>
+                <th>№ контейнера и типоразмер</th>
+                <th>Сведения о запорно-пломбировочных устройствах</th>
+                <th>Операция</th>
+                <th>Наименование груза</th>
+                <th>Примечание</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in carg %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.wagon }}</td>
+                <td>{{ item.container_and_size }}</td>
+                <td>{{ item.control_mark }}</td>
+                <td>{{ item.operation }}</td>
+                <td>{{ item.cargo_names }}</td>
+                <td>{{ item.note }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p><strong>Представитель клиента:</strong> {{ document.client_representative }}</p>
+    </div>
+</body>
+</html>
